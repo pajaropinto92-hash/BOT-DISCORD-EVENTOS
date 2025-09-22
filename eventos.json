@@ -1,0 +1,203 @@
+[
+    {
+        "id": "1",
+        "title": "50",
+        "description": "50",
+        "channel_id": 1415558226673668247,
+        "start": "2025-09-12 20:00",
+        "end": "2025-09-12 20:20",
+        "participants": [
+            "bigboydelux",
+            "bigboydelux",
+            "bigboydelux"
+        ],
+        "max_attendees": 50,
+        "multi_response": true,
+        "registration_open": true,
+        "participants_roles": {
+            "INF": [],
+            "OFICIAL": [],
+            "TANQUE": [],
+            "RECON": [],
+            "COMANDANTE": [],
+            "DECLINADO": [],
+            "TENTATIVO": []
+        },
+        "thread_created": true,
+        "reminder_sent": true,
+        "channel_created": true
+    },
+    {
+        "id": "2",
+        "title": "132132131",
+        "description": "1321321321321",
+        "channel_id": 1415558226673668247,
+        "start": "2025-09-12 20:00",
+        "end": "2025-09-12 23:00",
+        "participants_roles": {
+            "INF": [],
+            "OFICIAL": [],
+            "TANQUE": [],
+            "RECON": [],
+            "COMANDANTE": [],
+            "DECLINADO": [],
+            "TENTATIVO": []
+        },
+        "max_attendees": 50,
+        "multi_response": true,
+        "registration_open": true,
+        "thread_created": true,
+        "reminder_sent": true,
+        "channel_created": true
+    },
+    {
+        "id": "3",
+        "title": "5121512",
+        "description": "22212",
+        "channel_id": 1415558226673668247,
+        "start": "2025-09-12 20:00",
+        "end": "2025-09-12 20:20",
+        "participants_roles": {
+            "INF": [],
+            "OFICIAL": [],
+            "TANQUE": [],
+            "RECON": [],
+            "COMANDANTE": [],
+            "DECLINADO": [],
+            "TENTATIVO": []
+        },
+        "max_attendees": 50,
+        "multi_response": true,
+        "registration_open": true,
+        "thread_created": true,
+        "reminder_sent": true,
+        "channel_created": true
+    },
+    {
+        "id": "4",
+        "title": "505050",
+        "description": "505050503",
+        "channel_id": 1415558226673668247,
+        "start": "2025-09-12 20:00",
+        "end": "1 HORA",
+        "participants_roles": {
+            "INF": [],
+            "OFICIAL": [],
+            "TANQUE": [],
+            "RECON": [],
+            "COMANDANTE": [],
+            "DECLINADO": [],
+            "TENTATIVO": []
+        },
+        "max_attendees": 50,
+        "multi_response": true,
+        "registration_open": true,
+        "thread_created": true,
+        "reminder_sent": true,
+        "channel_created": true
+    },
+    {
+        "id": "5",
+        "title": "sdfsdfdsfdsf",
+        "description": "dgdfgfdgfdgfdg",
+        "channel_id": 1415558226673668247,
+        "start": "2025-09-12 20:00",
+        "end": "1 hora",
+        "participants_roles": {
+            "INF": [],
+            "OFICIAL": [
+                "OGT | TenienteDAHN",
+                "OGT | KiwiQ"
+            ],
+            "TANQUE": [],
+            "RECON": [],
+            "COMANDANTE": [],
+            "DECLINADO": [],
+            "TENTATIVO": []
+        },
+        "max_attendees": 50,
+        "multi_response": true,
+        "registration_open": true,
+        "thread_created": true,
+        "reminder_sent": true,
+        "channel_created": true
+    },
+    {
+        "id": "5e967153-64f0-4ef6-8bfc-97e353520dff",
+        "creator_id": 1252937461966045269,
+        "title": "50505",
+        "description": "505050",
+        "channel_id": 1415558226673668247,
+        "start": "2025-09-14 13:00",
+        "end": "1 hora",
+        "participants_roles": {
+            "INF": [],
+            "OFICIAL": [],
+            "TANQUE": [],
+            "RECON": [],
+            "COMANDANTE": [],
+            "DECLINADO": [],
+            "TENTATIVO": []
+        },
+        "max_attendees": 50,
+        "multi_response": true,
+        "registration_open": true,
+        "reminder_sent": true,
+        "channel_created": false
+    },
+    {
+        "channel_id": 1398380638071029991,
+        "title": "\ud83d\udd25 SCRIM CONFIRMADO \ud83d\udd25",
+        "description": "\ud83d\udcc5 Domingo 21\n\ud83d\udd57 17:30 HRS (M\u00e9xico) | 20:30 HRS (Chile)\n\u2694\ufe0f 36 vs 36\n\nCTM/360 \ud83c\udd9a OGT\n\n\ud83d\uddfa\ufe0f Mapa: Omaha Beach\n\ud83c\udfaf Punto: VierVille Sur Mer\n\n\ud83d\udea8 Prep\u00e1rense para una batalla intensa, coordinaci\u00f3n m\u00e1xima y fuego cruzado sin tregua. \u00a1Que gane el mejor escuadr\u00f3n! \ud83d\udca5",
+        "max_attendees": 50,
+        "start": "2025-09-21 16:30",
+        "end": "2 HORAS",
+        "mention_roles": [
+            1398422609691021393
+        ],
+        "id": "193b4dbd-8ee1-4e5d-bc03-223bbc6724e3",
+        "creator_id": 1252937461966045269,
+        "participants_roles": {
+            "INF": [
+                "OGT | GerardoUvx",
+                "OGT | Kirkr",
+                "OGT | Wero",
+                "OGT | Lenin33333",
+                "OGT | Carlos U125",
+                "OGT | DrDracxter",
+                "OGT | Cheesos_420",
+                "OGT | DanSpm24",
+                "OGT | DaCa",
+                "OGT | Cesarpakofac"
+            ],
+            "OFICIAL": [
+                "OGT | Suave",
+                "OGT | KiwiQ",
+                "OGT | Calitzuu",
+                "OGT | Tacosdepastor10",
+                "OGT | Samich \ud83e\udd6a",
+                "OGT | Santi"
+            ],
+            "TANQUE": [],
+            "RECON": [
+                "OGT | Scripteddrama"
+            ],
+            "COMANDANTE": [
+                "OGT | smiLk",
+                "OGT | CytrusMG"
+            ],
+            "DECLINADO": [],
+            "TENTATIVO": [
+                "OGT | TenienteDAHN",
+                "OGT | P1NZON",
+                "OGT | IgneelStrom",
+                "OGT | Dacobu",
+                "OGT | Perro de guerra"
+            ]
+        },
+        "registration_open": true,
+        "reminder_sent": false,
+        "channel_created": false,
+        "message_id": 1416930545044291685
+    }
+]
