@@ -928,6 +928,11 @@ async def proximos_eventos_visual(interaction: discord.Interaction):
     upcoming = [e for e in events if datetime.strptime(e["start"], "%Y-%m-%d %H:%M") >= now]
 
     if not upcoming:
+        embed = discord.Embed(
+            title="📭 Sin eventos próximos",
+            description="No hay eventos futuros registrados.",
+            color=discord.Color.red()
+        )
         await interaction.followup.send(embed=embed, ephemeral=True)
         return
 
