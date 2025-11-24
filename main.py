@@ -250,7 +250,27 @@ class EventActionButton(discord.ui.Button):
 
         elif self.label == "Editar evento":
             await interaction.response.send_message("Te enviaré un DM para editar el evento.", ephemeral=True)
-            # Aquí va tu flujo de edición existente
+            try:
+                embed = await create_event_embed(event)  # tu función original
+            except TypeError:
+                 embed = create_event_embed(event)  # si tu función no es async
+            try:
+                await interaction.user.send(
+                    "Aquí tienes el panel para editar tu evento:",
+                    embed=embed,
+                    view=EventEditView(event)  # tu vista original de edición
+                )
+            except discord.Forbidden:
+                await interaction.followup.send(
+                    "⚠️ No pude enviarte DM. Activa mensajes privados del servidor.",
+                    ephemeral=True
+                )
+                return
+                await interaction.followup.send(
+                    "Te envié un DM con el panel de edición del evento 💌",
+                    ephemeral=True
+                )
+            
 
 # -----------------------------
 # CLASES DE BOTONES Y VISTA
