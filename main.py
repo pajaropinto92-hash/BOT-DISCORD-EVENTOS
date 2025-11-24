@@ -725,25 +725,33 @@ async def send_event_reminder(event):
     )
 
     # Preparar menciones y agregar campos por rol
-    mentions = []
+    mention_members = []  # Aquí guardamos objetos Member
+    mention_strings = []  # Aquí guardamos los .mention (str)
+
     for role_key, names in event.get("participants_roles", {}).items():
         if role_key == "DECLINADO":
             continue
+
         if names:
             reminder_embed.add_field(
                 name=f"{BUTTONS[role_key][0]} {role_key} ({len(names)})",
                 value="\n".join(f"- {n}" for n in names),
                 inline=False
             )
+
+        # Buscar a cada miembro por display_name
         for name in names:
             member = discord.utils.find(lambda m: m.display_name == name, guild.members)
-            if member and member not in mentions:
-                mentions.append(member)
+
+            if member and member not in mention_members:
+                mention_members.append(member)
+                mention_strings.append(member.mention)  # <- convertir a string
 
     # Enviar embed en el canal principal
     await channel.send(
-    embed=reminder_embed,
-    content=f"Participantes confirmados: {', '.join(mentions)}" if mentions else None)
+        embed=reminder_embed,
+        content=f"Participantes confirmados: {', '.join(mention_strings)}" if mention_strings else None
+    )
 
     # Crear hilo si no existe
     thread = None
@@ -759,22 +767,23 @@ async def send_event_reminder(event):
 
     # Mensaje dentro del hilo
     if thread:
-        if mentions:
-            await thread.send(f"¡Bienvenidos al evento! {' '.join([m.mention for m in mentions])}")
+        if mention_members:
+            await thread.send("¡Bienvenidos al evento! " + " ".join(mention_strings))
         else:
             await thread.send("¡Bienvenidos al evento! No hay participantes aún.")
 
-
-
     # Enviar DM a cada participante
-    for member in mentions:
+    for member in mention_members:
         try:
-            await member.send(f"⏰ Tu evento **{event['title']}** empieza en 15 minutos en <#{channel.id}>!")
+            await member.send(
+                f"⏰ Tu evento **{event['title']}** empieza en 15 minutos en <#{channel.id}>!"
+            )
         except:
             pass
 
     event["reminder_sent"] = True
     save_events(events)
+
 
 # -----------------------------
 # 🔹 LOOP DE RECORDATORIOS
