@@ -231,14 +231,19 @@ class EventActionButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         global events
+
         event = next((e for e in events if e["id"] == self.event_id), None)
         if not event:
             await interaction.response.send_message("Evento no encontrado.", ephemeral=True)
             return
 
+        # -------------------------------------------
+        # ELIMINAR EVENTO
+        # -------------------------------------------
         if self.label == "Eliminar evento":
             events.remove(event)
             save_events(events)
+
             channel = bot.get_channel(event["channel_id"])
             if channel and "message_id" in event:
                 try:
@@ -246,113 +251,176 @@ class EventActionButton(discord.ui.Button):
                     await msg.delete()
                 except:
                     pass
+
             await interaction.response.send_message("Evento eliminado ✅", ephemeral=True)
-
-elif self.label == "Editar evento":
-    await interaction.response.send_message("Te enviaré un DM para editar el evento paso a paso.", ephemeral=True)
-    user = interaction.user
-
-    # Intentar enviar DM
-    try:
-        dm = await user.create_dm()
-        await dm.send("📬 Vamos a editar tu evento paso a paso.\nEscribe `cancelar` en cualquier momento para detener.")
-    except discord.Forbidden:
-        await interaction.followup.send(
-            "❌ No pude enviarte DM. Activa los mensajes privados del servidor.",
-            ephemeral=True
-        )
-        return
-
-    # === INICIO DEL FLUJO DE EDICIÓN ===
-    current_title = event["title"]
-    current_description = event["description"]
-    current_channel_id = event["channel_id"]
-    current_start = event["start"]
-    current_end = event.get("end")
-    current_max = event.get("max_attendees")
-
-    # 1️⃣ TÍTULO
-    await dm.send(f"Título actual: **{current_title}**\nEscribe el nuevo título o `skip`:")
-    new_title = await wait_for_text(user, dm, 200, allow_none=True)
-    if new_title is None:
-        await dm.send("❌ Edición cancelada.")
-        return
-    if new_title.lower() != "skip" and new_title.strip() != "":
-        event["title"] = new_title
-
-    # 2️⃣ DESCRIPCIÓN
-    await dm.send(f"Descripción actual: **{current_description or 'Ninguna'}**\nNueva descripción o `skip`:")
-    new_desc = await wait_for_text(user, dm, 1600, allow_none=True)
-    if new_desc is None:
-        await dm.send("❌ Edición cancelada.")
-        return
-    if new_desc.lower() != "skip":
-        event["description"] = new_desc
-
-    # 3️⃣ CANAL
-    guild = bot.get_guild(GUILD_ID)
-    text_channels = [c for c in guild.channels if isinstance(c, discord.TextChannel)]
-    await dm.send("Selecciona canal por número o `skip`:\n" +
-                  "\n".join(f"{i+1}. {c.name}" for i, c in enumerate(text_channels)))
-
-    chan_idx = await wait_for_number(user, dm, 1, len(text_channels))
-    if chan_idx is not None:
-        event["channel_id"] = text_channels[chan_idx - 1].id
-
-    # 4️⃣ FECHA Y HORA
-    await dm.send(f"Fecha actual: **{current_start}**\nNueva fecha `YYYY-MM-DD HH:MM` o `skip`:")
-    while True:
-        msg_time = await bot.wait_for("message", check=lambda m: m.author == user and m.guild is None)
-        if msg_time.content.lower() == "cancelar":
-            await dm.send("❌ Edición cancelada.")
             return
-        if msg_time.content.lower() == "skip":
-            break
-        try:
-            dt = datetime.strptime(msg_time.content, "%Y-%m-%d %H:%M")
-            event["start"] = dt.strftime("%Y-%m-%d %H:%M")
-            break
-        except:
-            await dm.send("Formato inválido. Intenta de nuevo.")
 
-    # 5️⃣ DURACIÓN
-    await dm.send(f"Duración actual: **{current_end or 'Ninguna'}**\nNueva duración o `skip`:")
-    new_duration = await wait_for_text(user, dm, 100, allow_none=True)
-    if new_duration and new_duration.lower() != "skip":
-        event["end"] = new_duration
-
-    # 6️⃣ MÁXIMO ASISTENTES
-    await dm.send(f"Máximo actual: **{current_max or 'Ninguno'}**\nNuevo número (1–250) o `skip`:")
-    while True:
-        msg = await bot.wait_for("message", check=lambda m: m.author == user and m.guild is None)
-        if msg.content.lower() == "cancelar":
-            await dm.send("❌ Edición cancelada.")
-            return
-        if msg.content.lower() == "skip":
-            break
-        if msg.content.isdigit() and 1 <= int(msg.content) <= 250:
-            event["max_attendees"] = int(msg.content)
-            break
-        await dm.send("Valor inválido. Intenta de nuevo.")
-
-    # GUARDAR CAMBIOS
-    save_events(events)
-
-    # ACTUALIZAR MENSAJE ORIGINAL
-    channel = bot.get_channel(event["channel_id"])
-    if channel and "message_id" in event:
-        try:
-            msg = await channel.fetch_message(event["message_id"])
-            embed = await create_event_embed(event)
-            await msg.edit(embed=embed, view=EventView(event["id"], event["creator_id"]))
-        except:
-            await channel.send(
-                "Hubo un error actualizando el evento. Enviando uno nuevo.",
-                embed=await create_event_embed(event),
-                view=EventView(event["id"], event["creator_id"])
+        # -------------------------------------------
+        # EDITAR EVENTO
+        # -------------------------------------------
+        if self.label == "Editar evento":
+            await interaction.response.send_message(
+                "📬 Te enviaré un DM para editar el evento paso a paso.",
+                ephemeral=True
             )
 
-    await dm.send("✅ **Evento editado correctamente.**")
+            user = interaction.user
+
+            # Intentar enviar DM
+            try:
+                dm = await user.create_dm()
+                await dm.send(
+                    "📬 Vamos a editar tu evento paso a paso.\n"
+                    "Escribe `cancelar` en cualquier momento para detener."
+                )
+            except discord.Forbidden:
+                await interaction.followup.send(
+                    "❌ No pude enviarte DM. Activa los mensajes privados del servidor.",
+                    ephemeral=True
+                )
+                return
+
+            # === INICIO DEL FLUJO DE EDICIÓN ===
+            current_title = event["title"]
+            current_description = event["description"]
+            current_channel_id = event["channel_id"]
+            current_start = event["start"]
+            current_end = event.get("end")
+            current_max = event.get("max_attendees")
+
+            # -------------------------------------------
+            # 1️⃣ TÍTULO
+            # -------------------------------------------
+            await dm.send(
+                f"Título actual: **{current_title}**\n"
+                "Escribe el nuevo título o `skip`:"
+            )
+            new_title = await wait_for_text(user, dm, 200, allow_none=True)
+            if new_title is None:
+                await dm.send("❌ Edición cancelada.")
+                return
+            if new_title.lower() != "skip" and new_title.strip() != "":
+                event["title"] = new_title
+
+            # -------------------------------------------
+            # 2️⃣ DESCRIPCIÓN
+            # -------------------------------------------
+            await dm.send(
+                f"Descripción actual: **{current_description or 'Ninguna'}**\n"
+                "Nueva descripción o `skip`:"
+            )
+            new_desc = await wait_for_text(user, dm, 1600, allow_none=True)
+            if new_desc is None:
+                await dm.send("❌ Edición cancelada.")
+                return
+            if new_desc.lower() != "skip":
+                event["description"] = new_desc
+
+            # -------------------------------------------
+            # 3️⃣ CANAL
+            # -------------------------------------------
+            guild = bot.get_guild(GUILD_ID)
+            text_channels = [c for c in guild.channels if isinstance(c, discord.TextChannel)]
+
+            await dm.send(
+                "Selecciona canal por número o `skip`:\n" +
+                "\n".join(f"{i+1}. {c.name}" for i, c in enumerate(text_channels))
+            )
+
+            chan_idx = await wait_for_number(user, dm, 1, len(text_channels))
+            if chan_idx is not None:
+                event["channel_id"] = text_channels[chan_idx - 1].id
+
+            # -------------------------------------------
+            # 4️⃣ FECHA Y HORA
+            # -------------------------------------------
+            await dm.send(
+                f"Fecha actual: **{current_start}**\n"
+                "Nueva fecha `YYYY-MM-DD HH:MM` o `skip`:"
+            )
+
+            while True:
+                msg_time = await bot.wait_for(
+                    "message",
+                    check=lambda m: m.author == user and m.guild is None
+                )
+
+                if msg_time.content.lower() == "cancelar":
+                    await dm.send("❌ Edición cancelada.")
+                    return
+
+                if msg_time.content.lower() == "skip":
+                    break
+
+                try:
+                    dt = datetime.strptime(msg_time.content, "%Y-%m-%d %H:%M")
+                    event["start"] = dt.strftime("%Y-%m-%d %H:%M")
+                    break
+                except:
+                    await dm.send("Formato inválido. Intenta de nuevo.")
+
+            # -------------------------------------------
+            # 5️⃣ DURACIÓN
+            # -------------------------------------------
+            await dm.send(
+                f"Duración actual: **{current_end or 'Ninguna'}**\n"
+                "Nueva duración o `skip`:"
+            )
+
+            new_duration = await wait_for_text(user, dm, 100, allow_none=True)
+            if new_duration and new_duration.lower() != "skip":
+                event["end"] = new_duration
+
+            # -------------------------------------------
+            # 6️⃣ MÁXIMO ASISTENTES
+            # -------------------------------------------
+            await dm.send(
+                f"Máximo actual: **{current_max or 'Ninguno'}**\n"
+                "Nuevo número (1–250) o `skip`:"
+            )
+
+            while True:
+                msg = await bot.wait_for(
+                    "message",
+                    check=lambda m: m.author == user and m.guild is None
+                )
+
+                if msg.content.lower() == "cancelar":
+                    await dm.send("❌ Edición cancelada.")
+                    return
+
+                if msg.content.lower() == "skip":
+                    break
+
+                if msg.content.isdigit() and 1 <= int(msg.content) <= 250:
+                    event["max_attendees"] = int(msg.content)
+                    break
+
+                await dm.send("Valor inválido. Intenta de nuevo.")
+
+            # -------------------------------------------
+            # GUARDAR CAMBIOS
+            # -------------------------------------------
+            save_events(events)
+
+            # -------------------------------------------
+            # ACTUALIZAR MENSAJE ORIGINAL
+            # -------------------------------------------
+            channel = bot.get_channel(event["channel_id"])
+            if channel and "message_id" in event:
+                try:
+                    msg = await channel.fetch_message(event["message_id"])
+                    embed = await create_event_embed(event)
+                    await msg.edit(embed=embed, view=EventView(event["id"], event["creator_id"]))
+                except:
+                    await channel.send(
+                        "Hubo un error actualizando el evento. Enviando uno nuevo.",
+                        embed=await create_event_embed(event),
+                        view=EventView(event["id"], event["creator_id"])
+                    )
+
+            await dm.send("✅ **Evento editado correctamente.**")
+
 
 # -----------------------------
 # CLASES DE BOTONES Y VISTA
