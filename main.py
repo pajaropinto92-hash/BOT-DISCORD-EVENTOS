@@ -221,6 +221,12 @@ async def callback(self, interaction: discord.Interaction):
             )
             return
 
+def clip(text: str, limit=1800):
+    """Recorta texto largo para evitar error de 2000 chars en Discord"""
+    if not text:
+        return "Ninguna"
+    text = str(text)
+    return text if len(text) <= limit else text[:limit] + "… (recortado)"
 
 
 class EventActionButton(discord.ui.Button):
@@ -281,8 +287,8 @@ class EventActionButton(discord.ui.Button):
                 return
 
             # === INICIO DEL FLUJO DE EDICIÓN ===
-            current_title = event["title"]
-            current_description = event["description"]
+            current_title = clip(event["title"])
+            current_description = clip(event["description"])
             current_channel_id = event["channel_id"]
             current_start = event["start"]
             current_end = event.get("end")
@@ -322,10 +328,10 @@ class EventActionButton(discord.ui.Button):
             guild = bot.get_guild(GUILD_ID)
             text_channels = [c for c in guild.channels if isinstance(c, discord.TextChannel)]
 
-            await dm.send(
-                "Selecciona canal por número o `skip`:\n" +
-                "\n".join(f"{i+1}. {c.name}" for i, c in enumerate(text_channels))
-            )
+            channels_list = "\n".join(f"{i+1}. {c.name}" for i, c in enumerate(text_channels))
+            channels_list = clip(channels_list, 1800)
+
+            await dm.send("Selecciona canal por número o `skip`:\n" + channels_list)
 
             chan_idx = await wait_for_number(user, dm, 1, len(text_channels))
             if chan_idx is not None:
@@ -420,6 +426,7 @@ class EventActionButton(discord.ui.Button):
                     )
 
             await dm.send("✅ **Evento editado correctamente.**")
+
 
 
 # -----------------------------
