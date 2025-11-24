@@ -50,15 +50,15 @@ EVENTS_FILE = "eventos.json"
 # BOTONES CON EMOJIS VÁLIDOS
 # -----------------------------
 BUTTONS = {
-    'INF': ('🪖', discord.ButtonStyle.success),
-    'OFICIAL': ('🎖️', discord.ButtonStyle.primary),
-    'TANQUE': ('🛡️', discord.ButtonStyle.success),
-    'RECON': ('🔭', discord.ButtonStyle.secondary),
-    'COMANDANTE': ('⭐', discord.ButtonStyle.danger),
-    'DECLINADO': ('❌', discord.ButtonStyle.secondary),
-    'TENTATIVO': ('⚠️', discord.ButtonStyle.primary)
+    'INF': ('<:INF:1442537656553701486>', discord.ButtonStyle.success),
+    'OFICIAL': ('<:Oficiales:1442537652153745588>', discord.ButtonStyle.primary),
+    'RECON': ('<:Recon:1442537585183428770>', discord.ButtonStyle.secondary),
+    'TANQUE': ('<:Tanques:1442537587146227722>', discord.ButtonStyle.success),
+    'ARTY': ('<:Arty:1442537659103711333>', discord.ButtonStyle.primary),
+    'COMANDANTE': ('<:Commander:1442537583761428654>', discord.ButtonStyle.danger),
+    'TENTATIVO': ('<:Tentativo:1442537588765229220>', discord.ButtonStyle.primary),
+    'DECLINADO': ('<:Declinado:1442537654699692073>', discord.ButtonStyle.secondary)
 }
-
 # -----------------------------
 # CARGAR / GUARDAR EVENTOS
 # -----------------------------
