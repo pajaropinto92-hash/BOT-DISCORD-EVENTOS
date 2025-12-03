@@ -13,8 +13,8 @@ from keep_alive import keep_alive  # Para Koyeb u otros hosts
 # CARGAR VARIABLES DE ENTORNO
 # -----------------------------
 load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
-GUILD_ID = int(os.getenv("GUILD_ID"))
+TOKEN = os.getenv("DISCORD_TOKEN_")
+GUILD_ID = int(os.getenv("GUILD_ID_"))
 
 # -----------------------------
 # CONFIGURACIÓN DEL BOT
